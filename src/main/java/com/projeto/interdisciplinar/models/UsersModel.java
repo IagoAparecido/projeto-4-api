@@ -3,14 +3,15 @@ package com.projeto.interdisciplinar.models;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.projeto.interdisciplinar.enums.Roles;
 
+import jakarta.mail.Multipart;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,7 +32,7 @@ import lombok.Setter;
 public class UsersModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -41,6 +42,9 @@ public class UsersModel implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(length = 1000)
+    private String imageUrl;
 
     private LocalDateTime createdAt;
 
