@@ -1,5 +1,7 @@
 *.properties
 
+src/main/resources/static/uploads/
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
