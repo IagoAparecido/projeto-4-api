@@ -65,11 +65,11 @@ public class UsersController {
     }
 
     // Update da imagem do usuário
-    @PatchMapping("/{userId}/image")
-    public ResponseEntity<String> updateUserImage(@PathVariable UUID userId,
+    @PatchMapping("/user/image")
+    public ResponseEntity<String> updateUserImage(
             @RequestParam("image") MultipartFile image) {
         try {
-            userService.updateUserImage(userId, image);
+            userService.updateUserImage(image);
             return ResponseEntity.ok("Imagem do usuário atualizada com sucesso.");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

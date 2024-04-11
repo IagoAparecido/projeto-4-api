@@ -81,7 +81,6 @@ public class UserService {
             UpdateUserDTO updateUserDTO) throws BadRequestException {
 
         try {
-            System.out.println("Acessou aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UUID authenticatedUserId = ((UsersModel) authentication.getPrincipal()).getId();
 
@@ -116,7 +115,11 @@ public class UserService {
     // tipos de arquivos permitidos
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("png", "jpeg", "jpg");
 
-    public void updateUserImage(UUID userId, MultipartFile image) throws IOException {
+    public void updateUserImage(MultipartFile image) throws IOException {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID authenticatedUserId = ((UsersModel) authentication.getPrincipal()).getId();
+
         // verifica se o arquivo não esta vazio
         if (image.isEmpty()) {
             throw new BadRequestException("O arquivo de imagem está vazio.");
@@ -129,7 +132,7 @@ public class UserService {
         }
 
         // pega o nome do arquivo
-        String imageName = userId + "_" + StringUtils.cleanPath(image.getOriginalFilename());
+        String imageName = authenticatedUserId + "_" + StringUtils.cleanPath(image.getOriginalFilename());
 
         // cria o diretório se não existir
         Path uploadDir = Paths.get(root);
@@ -140,7 +143,7 @@ public class UserService {
         // apaga o anterior
         try (Stream<Path> paths = Files.walk(uploadDir)) {
             paths.filter(Files::isRegularFile)
-                    .filter(path -> path.getFileName().toString().contains(userId.toString()))
+                    .filter(path -> path.getFileName().toString().contains(authenticatedUserId.toString()))
                     .forEach(path -> {
                         try {
                             Files.delete(path);
@@ -155,7 +158,7 @@ public class UserService {
         Files.copy(image.getInputStream(), imageUrl);
 
         // atualiza o caminho da imagem
-        userRepository.updateImageUrl(userId, imageName.toString());
+        userRepository.updateImageUrl(authenticatedUserId, imageName.toString());
     }
 
 }
