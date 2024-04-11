@@ -3,13 +3,11 @@ package com.projeto.interdisciplinar.services;
 import java.time.LocalDateTime;
 
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.projeto.interdisciplinar.dtos.AuthenticationDTO;
 import com.projeto.interdisciplinar.dtos.TokenDTO;
@@ -74,4 +72,5 @@ public class AuthenticationService {
 
         return user;
     }
+
 }

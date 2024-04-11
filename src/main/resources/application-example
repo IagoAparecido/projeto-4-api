@@ -6,8 +6,11 @@ spring.datasource.password=senha_do_banco
 spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
 ; server.port=8081
+image.url=src/main/resources/static/uploads/users
 
 spring.servlet.multipart.max-file-size = 120MB
 spring.servlet.multipart.max-request-size = 120MB
 
 api.security.token.secret=secret
+server.servlet.contextPath=/api
+

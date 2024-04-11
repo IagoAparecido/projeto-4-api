@@ -28,9 +28,13 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/uploads/users/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        // .requestMatchers(HttpMethod.POST, "/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/users/user").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/users/{userId}/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/users", "users/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -46,4 +50,5 @@ public class SecurityConfigurations {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

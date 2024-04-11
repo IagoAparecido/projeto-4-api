@@ -19,6 +19,9 @@ public interface UserRepository extends JpaRepository<UsersModel, UUID> {
     @Query(nativeQuery = true, value = "SELECT id, name, email, role, image_url FROM users WHERE email = ?1")
     GetUsersDTO findByEmailAndReturnDto(String email);
 
+    @Query(nativeQuery = true, value = "SELECT id, name, email, role, image_url FROM users WHERE id = ?1")
+    GetUsersDTO findByIdAndReturnDto(UUID id);
+
     @Query(nativeQuery = true, value = "SELECT id, name, email, role, image_url FROM users u WHERE u.role = 'USER'")
     List<GetUsersDTO> findAllDefaultUsers();
 

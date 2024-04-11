@@ -12,20 +12,31 @@ import java.util.stream.Stream;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
+import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
 import com.projeto.interdisciplinar.dtos.user.UserDTO;
+import com.projeto.interdisciplinar.enums.Roles;
+import com.projeto.interdisciplinar.models.UsersModel;
 import com.projeto.interdisciplinar.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private AuthenticationService authenticationService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AuthenticationService authenticationService) {
         this.userRepository = userRepository;
+        this.authenticationService = authenticationService;
     }
 
     // get dos users default
@@ -36,6 +47,59 @@ public class UserService {
     // get dos users admin
     public List<GetUsersDTO> getAllUsersAdmin() {
         return this.userRepository.findAllAdminUsers();
+    }
+
+    // update dos admin
+    public UsersModel updateAdmin(
+
+            UUID userId,
+            UpdateUserDTO updateUserDTO) throws BadRequestException {
+
+        try {
+            var user = this.userRepository.getReferenceById(userId);
+
+            if (user.getRole() != Roles.ADMIN) {
+                throw new BadRequestException("Apenas usuários com a role de ADMIN podem ser atualizados");
+            }
+
+            if (!updateUserDTO.name().isEmpty())
+                user.setName(updateUserDTO.name());
+
+            if (!updateUserDTO.password().isEmpty()) {
+                String encryptedPassword = new BCryptPasswordEncoder().encode(updateUserDTO.password());
+                user.setPassword(encryptedPassword);
+            }
+
+            return this.userRepository.save(user);
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            throw new BadRequestException("ID de usuario invalido");
+        }
+    }
+
+    // update do user
+    public UsersModel updateUser(
+            UpdateUserDTO updateUserDTO) throws BadRequestException {
+
+        try {
+            System.out.println("Acessou aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UUID authenticatedUserId = ((UsersModel) authentication.getPrincipal()).getId();
+
+            var user = this.userRepository.getReferenceById(authenticatedUserId);
+
+            if (!updateUserDTO.name().isEmpty())
+                user.setName(updateUserDTO.name());
+
+            if (!updateUserDTO.password().isEmpty()) {
+                String encryptedPassword = new BCryptPasswordEncoder().encode(updateUserDTO.password());
+                user.setPassword(encryptedPassword);
+            }
+
+            return this.userRepository.save(user);
+
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            throw new BadRequestException("ID de usuario invalido");
+        }
     }
 
     // update das imagens do user
@@ -90,10 +154,8 @@ public class UserService {
         Path imageUrl = uploadDir.resolve(imageName);
         Files.copy(image.getInputStream(), imageUrl);
 
-        System.out.println(imageUrl);
-
         // atualiza o caminho da imagem
-        userRepository.updateImageUrl(userId, imageUrl.toString());
+        userRepository.updateImageUrl(userId, imageName.toString());
     }
 
 }
