@@ -9,6 +9,8 @@ public interface GetUsersDTO {
 
     String getName();
 
+    String getStatus();
+
     String getImage_url();
 
     String getEmail();

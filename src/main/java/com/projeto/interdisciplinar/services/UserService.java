@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
+import com.projeto.interdisciplinar.dtos.user.UpdateStatusDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
 import com.projeto.interdisciplinar.dtos.user.UserDTO;
 import com.projeto.interdisciplinar.enums.Roles;
@@ -98,6 +99,23 @@ public class UserService {
 
         } catch (EntityNotFoundException | IllegalArgumentException e) {
             throw new BadRequestException("ID de usuario invalido");
+        }
+    }
+
+    // update do status do usuário
+    public UsersModel updateStatus(UUID userId,
+            UpdateStatusDTO updateStatus) throws BadRequestException {
+
+        try {
+            var user = this.userRepository.getReferenceById(userId);
+
+            if (updateStatus.status() != null)
+                user.setStatus(updateStatus.status());
+
+            return this.userRepository.save(user);
+
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            throw new BadRequestException("ID de usuario inválido");
         }
     }
 

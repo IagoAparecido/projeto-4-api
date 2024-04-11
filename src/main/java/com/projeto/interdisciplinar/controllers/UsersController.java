@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
+import com.projeto.interdisciplinar.dtos.user.UpdateStatusDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
 import com.projeto.interdisciplinar.dtos.user.UserDTO;
 import com.projeto.interdisciplinar.models.UsersModel;
@@ -75,6 +76,14 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao fazer upload da imagem: " + e.getMessage());
         }
+    }
+
+    // Bloquear usuário
+    @PatchMapping("/user/block/{userId}")
+    public ResponseEntity<UsersModel> updateUser(@PathVariable UUID userId,
+            @RequestBody @Valid UpdateStatusDTO updateStatus)
+            throws BadRequestException {
+        return ResponseEntity.ok().body(this.userService.updateStatus(userId, updateStatus));
     }
 
 }

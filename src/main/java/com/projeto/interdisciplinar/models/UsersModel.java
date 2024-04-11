@@ -9,7 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projeto.interdisciplinar.enums.Roles;
+import com.projeto.interdisciplinar.enums.Status;
 
 import jakarta.mail.Multipart;
 import jakarta.persistence.Column;
@@ -39,6 +41,9 @@ public class UsersModel implements UserDetails {
 
     @Column(nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(nullable = false)
     private String password;

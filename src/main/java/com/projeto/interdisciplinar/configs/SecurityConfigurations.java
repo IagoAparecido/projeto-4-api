@@ -16,6 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.projeto.interdisciplinar.services.SecurityFilter;
 
+import jakarta.servlet.DispatcherType;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -28,13 +30,15 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/uploads/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/users/user").hasRole("USER")
-                        .requestMatchers(HttpMethod.PUT, "/users/{userId}/image").hasRole("USER")
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/users/**", "/auth/token").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users", "users/admin").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/users/user").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}", "/users/user/block/{userId}")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}/image").hasRole("USER")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -3,6 +3,7 @@ package com.projeto.interdisciplinar.services;
 import java.time.LocalDateTime;
 
 import org.apache.coyote.BadRequestException;
+import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,8 @@ import com.projeto.interdisciplinar.dtos.AuthenticationDTO;
 import com.projeto.interdisciplinar.dtos.TokenDTO;
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
 import com.projeto.interdisciplinar.dtos.user.UserDTO;
+import com.projeto.interdisciplinar.enums.Roles;
+import com.projeto.interdisciplinar.enums.Status;
 import com.projeto.interdisciplinar.models.UsersModel;
 import com.projeto.interdisciplinar.repositories.UserRepository;
 
@@ -41,10 +44,10 @@ public class AuthenticationService {
         return new TokenDTO(token);
     }
 
-    public UsersModel create(UserDTO userDTO) throws BadRequestException {
+    public UsersModel create(UserDTO userDTO, String role) {
         if (this.userRepository.findByEmail(userDTO.email()) != null)
 
-            throw new BadRequestException("Email já existente.");
+            throw new RuntimeException("Email já existente.");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.password());
         LocalDateTime createdAt = LocalDateTime.now();
@@ -52,8 +55,9 @@ public class AuthenticationService {
         UsersModel user = new UsersModel();
         user.setEmail(userDTO.email());
         user.setName(userDTO.name());
+        user.setStatus(Status.AUTHORIZED);
         user.setPassword(encryptedPassword);
-        user.setRole(userDTO.role());
+        user.setRole(Roles.valueOf(role));
         user.setCreatedAt(createdAt);
 
         var response = this.userRepository.save(user);
@@ -69,6 +73,8 @@ public class AuthenticationService {
 
         UsersModel model = (UsersModel) security.getPrincipal();
         var user = this.userRepository.findByEmailAndReturnDto(model.getEmail());
+
+        // System.out.println(user);
 
         return user;
     }
