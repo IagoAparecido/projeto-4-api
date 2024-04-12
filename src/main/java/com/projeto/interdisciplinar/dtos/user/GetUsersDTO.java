@@ -11,6 +11,8 @@ public interface GetUsersDTO {
 
     String getStatus();
 
+    boolean getIsAuthenticated();
+
     String getImage_url();
 
     String getEmail();

@@ -56,6 +56,7 @@ public class AuthenticationService {
         user.setEmail(userDTO.email());
         user.setName(userDTO.name());
         user.setStatus(Status.AUTHORIZED);
+        user.setAuthenticated(false);
         user.setPassword(encryptedPassword);
         user.setRole(Roles.valueOf(role));
         user.setCreatedAt(createdAt);

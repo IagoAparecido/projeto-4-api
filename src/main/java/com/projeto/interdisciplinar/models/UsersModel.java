@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projeto.interdisciplinar.enums.Roles;
 import com.projeto.interdisciplinar.enums.Status;
 
-import jakarta.mail.Multipart;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -47,6 +46,9 @@ public class UsersModel implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private boolean isAuthenticated;
 
     @Column(length = 1000)
     private String imageUrl;
