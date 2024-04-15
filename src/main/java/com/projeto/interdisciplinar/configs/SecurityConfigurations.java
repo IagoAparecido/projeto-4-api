@@ -34,7 +34,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/uploads/users/**", "/auth/token").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users", "users/admin").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/confirm").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/users/user").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "/users/{userId}", "/users/user/block/{userId}")
                         .hasRole("ADMIN")

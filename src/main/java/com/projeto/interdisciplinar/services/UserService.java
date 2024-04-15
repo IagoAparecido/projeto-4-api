@@ -23,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateStatusDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
-import com.projeto.interdisciplinar.dtos.user.UserDTO;
 import com.projeto.interdisciplinar.enums.Roles;
 import com.projeto.interdisciplinar.models.UsersModel;
 import com.projeto.interdisciplinar.repositories.UserRepository;
@@ -33,11 +32,9 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private AuthenticationService authenticationService;
 
     public UserService(UserRepository userRepository, AuthenticationService authenticationService) {
         this.userRepository = userRepository;
-        this.authenticationService = authenticationService;
     }
 
     // get dos users default

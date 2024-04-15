@@ -2,6 +2,8 @@
 
 src/main/resources/static/uploads/
 
+text.txt
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

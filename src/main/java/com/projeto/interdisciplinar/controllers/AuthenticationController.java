@@ -1,17 +1,22 @@
 package com.projeto.interdisciplinar.controllers;
 
+import java.util.UUID;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projeto.interdisciplinar.dtos.AuthenticationDTO;
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
+import com.projeto.interdisciplinar.dtos.user.UpdateIsAuthenticatedDTO;
 import com.projeto.interdisciplinar.dtos.user.UserDTO;
 import com.projeto.interdisciplinar.enums.Roles;
 import com.projeto.interdisciplinar.models.UsersModel;
@@ -32,6 +37,12 @@ public class AuthenticationController {
         @PostMapping("/login")
         public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
                 return ResponseEntity.ok().body(this.authenticationService.login(data));
+        }
+
+        @PostMapping("/confirm")
+        public ResponseEntity confirmEmail(@RequestParam String email,
+                        @RequestBody @Valid UpdateIsAuthenticatedDTO isAuthenticatedDTO) throws BadRequestException {
+                return ResponseEntity.ok().body(this.authenticationService.confirmEmail(email, isAuthenticatedDTO));
         }
 
         @PostMapping("/register")
