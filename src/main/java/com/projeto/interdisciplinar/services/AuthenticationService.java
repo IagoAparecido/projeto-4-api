@@ -1,9 +1,7 @@
 package com.projeto.interdisciplinar.services;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +67,8 @@ public class AuthenticationService {
 
             // se o user não estiver autenticado, reenvia o email de confirmação
             this.emailService.sendEmail(user.getEmail(), "Confirmação do cadastro.",
-                    "Ultilize o código: " + rawCode + " para confirmar seu cadastro.");
+                    "Ultilize o código: " + "<span style=\"font-size: 20px; font-weight: bold;\">" + rawCode + "</span>"
+                            + " para confirmar seu cadastro.");
 
             this.userRepository.save(user);
 
