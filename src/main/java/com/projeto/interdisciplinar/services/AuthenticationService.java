@@ -45,9 +45,11 @@ public class AuthenticationService {
         this.emailService = emailService;
     }
 
-    private int generateRandomCode() {
+    private String generateRandomCode() {
         Random random = new Random();
-        return 000000 + random.nextInt(999999); // Gera um número aleatório entre 100000 e 999999
+        int randomCode = random.nextInt(999999);
+
+        return String.format("%06d", randomCode);
     }
 
     // login
@@ -60,9 +62,16 @@ public class AuthenticationService {
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         UsersModel user = (UsersModel) userDetails;
         if (!user.isAuthenticated()) {
+            String rawCode = generateRandomCode();
+            String rashCode = new BCryptPasswordEncoder().encode(rawCode);
+
+            user.setCode(rashCode);
+
             // se o user não estiver autenticado, reenvia o email de confirmação
             this.emailService.sendEmail(user.getEmail(), "Confirmação do cadastro.",
-                    "Ultilize o código: " + user.getCode().toString() + " para confirmar seu cadastro.");
+                    "Ultilize o código: " + rawCode + " para confirmar seu cadastro.");
+
+            this.userRepository.save(user);
 
             return ResponseEntity.ok().body(
                     new TokenDTO("Confirme seu e-mail para fazer login."));
@@ -88,11 +97,15 @@ public class AuthenticationService {
         user.setPassword(encryptedPassword);
         user.setRole(Roles.valueOf(role));
         user.setCreatedAt(createdAt);
-        user.setCode(role == "ADMIN" ? null : generateRandomCode());
+
+        String rawCode = generateRandomCode();
+        String code = "ADMIN".equals(role) ? null : new BCryptPasswordEncoder().encode(rawCode);
+
+        user.setCode(code);
 
         if (role == "USER") {
             this.emailService.sendEmail(user.getEmail(), "Confirmação do cadastro.",
-                    "Ultilize o código: " + user.getCode().toString() + " para confirmar seu cadastro.");
+                    "Ultilize o código: " + rawCode + " para confirmar seu cadastro.");
         }
 
         var response = this.userRepository.save(user);
@@ -106,7 +119,10 @@ public class AuthenticationService {
         var user = (UsersModel) this.userRepository.findByEmail(email);
 
         try {
-            if (isAuthenticatedDTO.code().equals(user.getCode())) {
+            System.out.println(isAuthenticatedDTO.code());
+            System.out.println(new BCryptPasswordEncoder().matches(user.getCode(), isAuthenticatedDTO.code()));
+
+            if (new BCryptPasswordEncoder().matches(isAuthenticatedDTO.code(), user.getCode())) {
                 user.setAuthenticated(true);
                 user.setCode(null);
             } else {

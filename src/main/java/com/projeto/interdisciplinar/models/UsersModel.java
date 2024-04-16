@@ -44,7 +44,7 @@ public class UsersModel implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private Integer code;
+    private String code;
 
     @Column(nullable = false)
     private String password;
