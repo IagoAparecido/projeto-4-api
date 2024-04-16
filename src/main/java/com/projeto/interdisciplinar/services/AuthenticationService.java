@@ -112,16 +112,17 @@ public class AuthenticationService {
     }
 
     // confirmação do email
-    public UsersModel confirmEmail(String email, UpdateIsAuthenticatedDTO isAuthenticatedDTO)
+    public UsersModel confirmEmail(String email, String code)
             throws BadRequestException {
 
         var user = (UsersModel) this.userRepository.findByEmail(email);
 
-        try {
-            System.out.println(isAuthenticatedDTO.code());
-            System.out.println(new BCryptPasswordEncoder().matches(user.getCode(), isAuthenticatedDTO.code()));
+        if (user == null) {
+            throw new BadRequestException("Usuário não encontrado");
+        }
 
-            if (new BCryptPasswordEncoder().matches(isAuthenticatedDTO.code(), user.getCode())) {
+        try {
+            if (new BCryptPasswordEncoder().matches(code, user.getCode())) {
                 user.setAuthenticated(true);
                 user.setCode(null);
             } else {
@@ -132,6 +133,38 @@ public class AuthenticationService {
 
         } catch (EntityNotFoundException e) {
             throw new BadRequestException("E-mail do usuario inválido");
+        }
+    }
+
+    // reenviar email com código de confirmação
+    public UsersModel resendCode(String email)
+            throws BadRequestException {
+
+        var user = (UsersModel) this.userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new BadRequestException("Usuário não encontrado");
+        }
+
+        try {
+
+            if (user.isAuthenticated() == true) {
+                throw new BadRequestException("Usuário já autenticado.");
+            }
+
+            String rawCode = generateRandomCode();
+            String code = new BCryptPasswordEncoder().encode(rawCode);
+
+            user.setCode(code);
+
+            this.emailService.sendEmail(user.getEmail(), "Confirmação do cadastro.",
+                    "Ultilize o código: " + rawCode + " para confirmar seu cadastro.");
+
+            var response = this.userRepository.save(user);
+            return response;
+
+        } catch (EntityNotFoundException e) {
+            throw new BadRequestException("E-mail do usuario inválido.");
         }
     }
 

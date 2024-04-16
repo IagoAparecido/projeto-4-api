@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
+import com.projeto.interdisciplinar.dtos.user.UpdatePasswordDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateStatusDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
 import com.projeto.interdisciplinar.dtos.user.UserDTO;
@@ -84,6 +86,28 @@ public class UsersController {
             @RequestBody @Valid UpdateStatusDTO updateStatus)
             throws BadRequestException {
         return ResponseEntity.ok().body(this.userService.updateStatus(userId, updateStatus));
+    }
+
+    // confirmar email para troca de senha
+    @PatchMapping("/user/send_code")
+    public ResponseEntity<UsersModel> sendCode(@RequestParam String email)
+            throws BadRequestException {
+        return ResponseEntity.ok().body(this.userService.sendCode(email));
+    }
+
+    // confirmar email para troca de senha
+    @GetMapping("/user/confirm_email")
+    public ResponseEntity<UsersModel> confirmEmail(@RequestParam String email, @RequestParam String code)
+            throws BadRequestException {
+        return ResponseEntity.ok().body(this.userService.confirmEmail(email, code));
+    }
+
+    // troca de senha / esqueci a senha
+    @PatchMapping("/user/change_password")
+    public ResponseEntity<UsersModel> changePassword(@RequestParam String email,
+            @RequestBody @Valid UpdatePasswordDTO updatePasswordDTO)
+            throws BadRequestException {
+        return ResponseEntity.ok().body(this.userService.changePassword(email, updatePasswordDTO));
     }
 
 }

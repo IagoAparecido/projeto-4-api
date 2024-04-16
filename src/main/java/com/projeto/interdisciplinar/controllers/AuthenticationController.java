@@ -41,8 +41,13 @@ public class AuthenticationController {
 
         @PostMapping("/confirm")
         public ResponseEntity confirmEmail(@RequestParam String email,
-                        @RequestBody @Valid UpdateIsAuthenticatedDTO isAuthenticatedDTO) throws BadRequestException {
-                return ResponseEntity.ok().body(this.authenticationService.confirmEmail(email, isAuthenticatedDTO));
+                        @RequestParam String code) throws BadRequestException {
+                return ResponseEntity.ok().body(this.authenticationService.confirmEmail(email, code));
+        }
+
+        @GetMapping("/confirm/resend")
+        public ResponseEntity resendCode(@RequestParam String email) throws BadRequestException {
+                return ResponseEntity.ok().body(this.authenticationService.resendCode(email));
         }
 
         @PostMapping("/register")

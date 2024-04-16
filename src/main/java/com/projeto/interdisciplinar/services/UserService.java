@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -21,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.projeto.interdisciplinar.dtos.user.GetUsersDTO;
+import com.projeto.interdisciplinar.dtos.user.UpdatePasswordDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateStatusDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
 import com.projeto.interdisciplinar.enums.Roles;
@@ -31,10 +33,13 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
+    private EmailService emailService;
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, AuthenticationService authenticationService) {
+    public UserService(UserRepository userRepository, EmailService emailService,
+            AuthenticationService authenticationService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     // get dos users default
@@ -113,6 +118,81 @@ public class UserService {
 
         } catch (EntityNotFoundException | IllegalArgumentException e) {
             throw new BadRequestException("ID de usuario inválido");
+        }
+    }
+
+    // enviar email esqueci a senha
+    private String generateRandomCode() {
+        Random random = new Random();
+        int randomCode = random.nextInt(999999);
+        return String.format("%06d", randomCode);
+    }
+
+    public UsersModel sendCode(String email)
+            throws BadRequestException {
+
+        var user = (UsersModel) this.userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new BadRequestException("Usuário não encontrado");
+        }
+
+        String rawCode = generateRandomCode();
+        String rashCode = new BCryptPasswordEncoder().encode(rawCode);
+
+        try {
+            this.emailService.sendEmail(user.getEmail(), "Alteração de senha.",
+                    "Ultilize o código: " + rawCode + " para alterar sua senha.");
+
+            user.setCode_password(rashCode);
+            return this.userRepository.save(user);
+
+        } catch (EntityNotFoundException e) {
+            throw new BadRequestException("E-mail do usuario inválido");
+        }
+    }
+
+    // confirmar email / esqueci a senha
+    public UsersModel confirmEmail(String email, String code) throws BadRequestException {
+
+        var user = (UsersModel) this.userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new BadRequestException("Usuário não encontrado");
+        }
+
+        try {
+            if (new BCryptPasswordEncoder().matches(code, user.getCode_password())) {
+                user.setCode_password(null);
+            } else {
+                throw new BadRequestException("Código inválido");
+            }
+
+            return this.userRepository.save(user);
+
+        } catch (EntityNotFoundException e) {
+            throw new BadRequestException("E-mail do usuario inválido");
+        }
+    }
+
+    // Update da senha / esqueci a senha
+    public UsersModel changePassword(String email, UpdatePasswordDTO updatePasswordDTO) throws BadRequestException {
+
+        try {
+            var user = (UsersModel) this.userRepository.findByEmail(email);
+
+            if (user == null) {
+                throw new BadRequestException("Usuário não encontrado");
+            }
+
+            String rashPassword = new BCryptPasswordEncoder().encode(updatePasswordDTO.password());
+
+            user.setPassword(rashPassword);
+
+            return this.userRepository.save(user);
+
+        } catch (EntityNotFoundException e) {
+            throw new BadRequestException("E-mail do usuario inválido");
         }
     }
 

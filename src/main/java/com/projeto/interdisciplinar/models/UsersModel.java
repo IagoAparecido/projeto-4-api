@@ -45,6 +45,7 @@ public class UsersModel implements UserDetails {
     private Status status;
 
     private String code;
+    private String code_password;
 
     @Column(nullable = false)
     private String password;

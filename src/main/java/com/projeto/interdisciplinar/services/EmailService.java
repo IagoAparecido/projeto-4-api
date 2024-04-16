@@ -19,7 +19,7 @@ public class EmailService {
 
         try {
             String htmlMsg = "<html><body>" +
-                    "<h2 style=\"color: #007bff;\">Confirmação do cadastro</h2>" +
+                    "<h2 style=\"color: #007bff;\">Confirme seu e-mail</h2>" +
                     "<p style=\"font-size: 18px;\">" + body + "</p>" +
                     "</body></html>";
 
