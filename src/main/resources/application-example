@@ -1,8 +1,8 @@
 spring.application.name=projeto
 spring.datasource.driver-class-name=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://localhost:5432/nome_da_tabela 
-spring.datasource.username=nome_do_banco
-spring.datasource.password=senha_do_banco
+spring.datasource.url=jdbc:postgresql://localhost:5432/projeto_4
+spring.datasource.username=postgres
+spring.datasource.password=
 spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=update
 ; server.port=8081
@@ -11,6 +11,17 @@ image.url=src/main/resources/static/uploads/users
 spring.servlet.multipart.max-file-size = 120MB
 spring.servlet.multipart.max-request-size = 120MB
 
-api.security.token.secret=secret
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+spring.jpa.defer-datasource-initialization=true
+spring.sql.init.mode=always
+
+api.security.token.secret=
 server.servlet.contextPath=/api
+
 
