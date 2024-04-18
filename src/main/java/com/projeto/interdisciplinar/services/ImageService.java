@@ -43,8 +43,6 @@ public class ImageService {
                 "image/jpeg"
         };
 
-        System.out.println(root);
-
         List<String> mimetypePermissions = new ArrayList<>(Arrays.asList(array));
 
         if (createImagesDTO.image().isEmpty()) {

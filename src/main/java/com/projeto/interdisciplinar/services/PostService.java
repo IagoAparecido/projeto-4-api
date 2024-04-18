@@ -1,6 +1,5 @@
 package com.projeto.interdisciplinar.services;
 
-import java.io.IOException;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,7 +11,6 @@ import java.util.UUID;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

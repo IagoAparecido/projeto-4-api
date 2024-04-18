@@ -1,8 +1,10 @@
 package com.projeto.interdisciplinar.models;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,36 +21,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "comments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class PostsModel {
+public class CommentsModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String name;
-
-    private String age;
-
     @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
-    private String UF;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String sex;
 
     private LocalDateTime created_at;
 
@@ -57,9 +44,12 @@ public class PostsModel {
     @JoinColumn(name = "user_id", nullable = false)
     private UsersModel user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-    private List<ImagesModel> images;
+    @ManyToOne()
+    @JoinColumn(name = "post_id", nullable = false)
+    @JsonIgnore
+    private PostsModel post;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<CommentsModel> comments;
+    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<SubCommentsModel> sub_comments;
+
 }
