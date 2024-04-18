@@ -75,7 +75,7 @@ public class UserService {
 
             return this.userRepository.save(user);
         } catch (EntityNotFoundException | IllegalArgumentException e) {
-            throw new BadRequestException("ID de usuario invalido");
+            throw new BadRequestException(e);
         }
     }
 
@@ -100,7 +100,7 @@ public class UserService {
             return this.userRepository.save(user);
 
         } catch (EntityNotFoundException | IllegalArgumentException e) {
-            throw new BadRequestException("ID de usuario invalido");
+            throw new BadRequestException("ID de usuario invalido: " + e);
         }
     }
 
@@ -117,7 +117,7 @@ public class UserService {
             return this.userRepository.save(user);
 
         } catch (EntityNotFoundException | IllegalArgumentException e) {
-            throw new BadRequestException("ID de usuario inválido");
+            throw new BadRequestException("ID de usuario inválido:" + e);
         }
     }
 
@@ -148,7 +148,7 @@ public class UserService {
             return this.userRepository.save(user);
 
         } catch (EntityNotFoundException e) {
-            throw new BadRequestException("E-mail do usuario inválido");
+            throw new BadRequestException("E-mail do usuario inválido: " + e);
         }
     }
 
@@ -171,7 +171,7 @@ public class UserService {
             return this.userRepository.save(user);
 
         } catch (EntityNotFoundException e) {
-            throw new BadRequestException("E-mail do usuario inválido");
+            throw new BadRequestException("E-mail do usuario inválido: " + e);
         }
     }
 
@@ -192,7 +192,7 @@ public class UserService {
             return this.userRepository.save(user);
 
         } catch (EntityNotFoundException e) {
-            throw new BadRequestException("E-mail do usuario inválido");
+            throw new BadRequestException("E-mail do usuario inválido: " + e);
         }
     }
 

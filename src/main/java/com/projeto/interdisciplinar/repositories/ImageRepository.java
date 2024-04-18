@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.projeto.interdisciplinar.models.ImagesModel;
 
 public interface ImageRepository extends JpaRepository<ImagesModel, UUID> {
-
 }

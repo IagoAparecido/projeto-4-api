@@ -35,7 +35,7 @@ public class SecurityConfigurations {
                                 "/users/user/confirm_email")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/users", "users/admin").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/posts").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/posts", "/posts/post/{userId}").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/auth/register/admin").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/posts/post").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/confirm")
@@ -46,7 +46,8 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.PATCH, "/users/{userId}", "/users/user/block/{userId}")
                         .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/users/{userId}/image").hasRole("USER")
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.DELETE, "/posts/post/{userId}").hasRole("USER")
+                        .anyRequest().denyAll())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
