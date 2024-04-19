@@ -109,6 +109,7 @@ public class CommentService {
 
                     this.subCommentRepository.deleteById(commentId);
 
+                    return subComment;
                 } else {
                     throw new BadRequestException("Você não tem permissão para excluir este comentário.");
                 }
@@ -119,7 +120,6 @@ public class CommentService {
         } catch (Exception e) {
             throw new BadRequestException(e);
         }
-        return null;
     }
 
     public CommentsModel removeComment(UUID commentId) throws BadRequestException {
@@ -133,10 +133,9 @@ public class CommentService {
                 if (authenticatedUser.getRole().toString().equals("ADMIN")
                         || authenticatedUser.getId().equals(comment.getUser().getId())) {
 
-                    System.out.println(
-                            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
                     this.commentRepository.deleteById(commentId);
+
+                    return comment;
 
                 } else {
                     throw new BadRequestException("Você não tem permissão para excluir este comentário.");
@@ -148,6 +147,6 @@ public class CommentService {
         } catch (Exception e) {
             throw new BadRequestException(e);
         }
-        return null;
+
     }
 }

@@ -84,10 +84,10 @@ public class PostService {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 UsersModel authenticatedUser = (UsersModel) authentication.getPrincipal();
 
-                List<UUID> imageIds = new ArrayList<>();
+                // List<UUID> imageIds = new ArrayList<>();
                 List<String> imageUrl = new ArrayList<>();
                 for (ImagesModel image : post.getImages()) {
-                    imageIds.add(image.getId());
+                    // imageIds.add(image.getId());
                     imageUrl.add(image.getUrl());
                 }
 
@@ -103,7 +103,7 @@ public class PostService {
                 if (authenticatedUser.getRole().toString().equals("ADMIN")
                         || authenticatedUser.getId().equals(post.getUser().getId())) {
 
-                    this.imageRepository.deleteAllById(imageIds);
+                    // this.imageRepository.deleteAllById(imageIds);
                     this.postRepository.deleteById(postId);
 
                 } else {

@@ -49,7 +49,7 @@ public class CommentsModel {
     @JsonIgnore
     private PostsModel post;
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<SubCommentsModel> sub_comments;
 
 }
