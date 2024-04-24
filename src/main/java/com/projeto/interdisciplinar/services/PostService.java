@@ -76,6 +76,11 @@ public class PostService {
         return this.postRepository.findByUser(userId);
     }
 
+    public PostsModel getUniquePost(UUID postId) {
+        PostsModel response = this.postRepository.findById(postId).orElse(null);
+        return response;
+    }
+
     public PostsModel removePost(UUID postId) throws BadRequestException {
         try {
             PostsModel post = this.postRepository.findById(postId).orElse(null);

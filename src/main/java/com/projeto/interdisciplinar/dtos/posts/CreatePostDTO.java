@@ -8,14 +8,16 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.NotNull;
 
 public record CreatePostDTO(
-                String name,
-                String age,
-                @NotNull String sex,
-                @NotNull String description,
-                @NotNull String UF,
+        String name,
+        String age,
+        String race,
+        @NotNull String sex,
+        @NotNull String type,
+        @NotNull String description,
+        @NotNull String UF,
 
-                List<MultipartFile> image,
+        List<MultipartFile> image,
 
-                @NotNull String city) {
+        @NotNull String city) {
 
 }

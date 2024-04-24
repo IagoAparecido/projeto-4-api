@@ -34,9 +34,14 @@ public class PostsController {
         return ResponseEntity.ok().body(this.postService.getAllPosts());
     }
 
-    @GetMapping("/post/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<PostsModel>> getPostsByUser(@PathVariable UUID userId) {
         return ResponseEntity.ok().body(this.postService.getPostsByUser(userId));
+    }
+
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<PostsModel> getUniquePost(@PathVariable UUID postId) {
+        return ResponseEntity.ok().body(this.postService.getUniquePost(postId));
     }
 
     @PostMapping("/post")
@@ -45,7 +50,7 @@ public class PostsController {
     }
 
     @DeleteMapping("/post/{postId}")
-    public ResponseEntity<PostsModel> register(@PathVariable UUID postId) throws BadRequestException {
+    public ResponseEntity<PostsModel> remove(@PathVariable UUID postId) throws BadRequestException {
         return ResponseEntity.ok().body(this.postService.removePost(postId));
     }
 

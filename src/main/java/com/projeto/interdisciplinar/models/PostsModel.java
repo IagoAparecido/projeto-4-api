@@ -48,6 +48,11 @@ public class PostsModel {
     private String city;
 
     @Column(nullable = false)
+    private String type;
+
+    private String race;
+
+    @Column(nullable = false)
     private String sex;
 
     private LocalDateTime created_at;
