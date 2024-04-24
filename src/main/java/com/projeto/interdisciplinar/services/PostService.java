@@ -11,6 +11,8 @@ import java.util.UUID;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -68,8 +70,9 @@ public class PostService {
         return response;
     }
 
-    public List<PostsModel> getAllPosts() {
-        return this.postRepository.findAllPosts();
+    public List<PostsModel> getAllPosts(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return this.postRepository.findAll(pageable).getContent();
     }
 
     public List<PostsModel> getPostsByUser(UUID userId) {

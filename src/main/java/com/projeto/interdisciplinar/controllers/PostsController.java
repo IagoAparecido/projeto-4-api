@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projeto.interdisciplinar.dtos.posts.CreatePostDTO;
@@ -30,8 +31,8 @@ public class PostsController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<PostsModel>> getAllPosts() {
-        return ResponseEntity.ok().body(this.postService.getAllPosts());
+    public ResponseEntity<List<PostsModel>> getAllPosts(@RequestParam int page) {
+        return ResponseEntity.ok().body(this.postService.getAllPosts(page));
     }
 
     @GetMapping("/user/{userId}")
