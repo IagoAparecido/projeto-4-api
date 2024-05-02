@@ -114,7 +114,7 @@ public class CommentService {
                     throw new BadRequestException("Você não tem permissão para excluir este comentário.");
                 }
             } else {
-                throw new BadRequestException("Comentário não encontrada.");
+                throw new BadRequestException("Comentário não encontrado.");
             }
 
         } catch (Exception e) {

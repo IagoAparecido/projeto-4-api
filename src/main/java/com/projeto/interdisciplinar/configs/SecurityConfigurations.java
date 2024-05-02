@@ -35,7 +35,9 @@ public class SecurityConfigurations {
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/uploads/users/**", "/auth/token",
                                                                 "/auth/confirm/resend",
-                                                                "/users/user/confirm_email")
+                                                                "/users/user/confirm_email",
+                                                                "/messages/{senderId}/{recipientId}",
+                                                                "/messages/{userId}")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/users", "users/admin")
                                                 .hasRole("ADMIN")
@@ -49,7 +51,7 @@ public class SecurityConfigurations {
                                                                 "/comments/sub_comment/{postId}")
                                                 .hasRole("USER")
                                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register",
-                                                                "/auth/confirm")
+                                                                "/auth/confirm", "/chat")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PATCH, "/users/user/send_code",
                                                                 "/users/user/change_password")
@@ -64,7 +66,9 @@ public class SecurityConfigurations {
                                                                 "/comments/sub_comment/{commentId}",
                                                                 "/comments/comment/{commentId}")
                                                 .hasRole("USER")
+                                                .requestMatchers("/wss").permitAll()
                                                 .anyRequest().denyAll())
+
                                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                                 .build();
         }
