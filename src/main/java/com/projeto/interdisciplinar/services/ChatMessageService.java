@@ -5,11 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.projeto.interdisciplinar.models.ChatMessage;
+import com.projeto.interdisciplinar.models.UsersModel;
 import com.projeto.interdisciplinar.repositories.ChatMessageRepository;
 
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,5 +38,16 @@ public class ChatMessageService {
 
         return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
     };
+
+    public ChatMessage removeMessage(UUID senderId, UUID messageId) throws BadRequestException {
+        var message = repository.findById(messageId);
+
+        if (message.get().getSenderId().equals(senderId)) {
+            this.repository.deleteById(messageId);
+            return null;
+        } else {
+            throw new BadRequestException("Você não tem permissão para excluir essa mensagem.");
+        }
+    }
 
 }

@@ -36,8 +36,8 @@ public class PostsController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostsModel>> getPostsByUser(@PathVariable UUID userId) {
-        return ResponseEntity.ok().body(this.postService.getPostsByUser(userId));
+    public ResponseEntity<List<PostsModel>> getPostsByUser(@PathVariable UUID userId, @RequestParam int page) {
+        return ResponseEntity.ok().body(this.postService.getPostsByUser(userId, page));
     }
 
     @GetMapping("/post/{postId}")

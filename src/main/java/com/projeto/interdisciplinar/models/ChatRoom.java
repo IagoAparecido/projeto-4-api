@@ -30,5 +30,6 @@ public class ChatRoom {
     private UUID chatId;
     private UUID senderId;
     private UUID recipientId;
+    private Boolean status;
 
 }

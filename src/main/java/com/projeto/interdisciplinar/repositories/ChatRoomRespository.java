@@ -12,8 +12,10 @@ import com.projeto.interdisciplinar.models.ChatRoom;
 public interface ChatRoomRespository extends JpaRepository<ChatRoom, UUID> {
     Optional<ChatRoom> findBySenderIdAndRecipientId(UUID senderId, UUID recipientId);
 
-    // @Query(value = "SELECT * FROM chat_room WHERE sender_id = ?1", nativeQuery =
-    // true)
-    // List<ChatRoom> findChatRooms(UUID senderId);
+    @Query(value = "SELECT * FROM chat_room WHERE sender_id = ?1 AND status = true", nativeQuery = true)
+    List<ChatRoom> findChatRooms(UUID senderId);
+
+    @Query(value = "SELECT * FROM chat_room WHERE id = ?1", nativeQuery = true)
+    ChatRoom findChatRoom(UUID roomId);
 
 }

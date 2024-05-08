@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import com.projeto.interdisciplinar.models.ChatRoom;
@@ -36,12 +37,14 @@ public class ChatRoomService {
                 .chatId(chatId)
                 .senderId(senderId)
                 .recipientId(recipientId)
+                .status(true)
                 .build();
 
         ChatRoom recipientSender = ChatRoom.builder()
                 .chatId(chatId)
                 .senderId(recipientId)
                 .recipientId(senderId)
+                .status(true)
                 .build();
 
         chatRoomRespository.save(senderRecipient);
@@ -49,8 +52,19 @@ public class ChatRoomService {
         return chatId;
     }
 
-    // public List<ChatRoom> getAllChatRoomsByUserId(UUID userId) {
-    // var rooms = chatRoomRespository.findChatRooms(userId);
-    // return rooms;
-    // }
+    public List<ChatRoom> getAllChatRoomsByUserId(UUID userId) {
+        var rooms = chatRoomRespository.findChatRooms(userId);
+        return rooms;
+    }
+
+    public ChatRoom removeChatRoom(UUID senderId, UUID roomId) throws BadRequestException {
+        var room = chatRoomRespository.findChatRoom(roomId);
+
+        if (room.getSenderId().equals(senderId)) {
+            room.setStatus(false);
+            return this.chatRoomRespository.save(room);
+        } else {
+            throw new BadRequestException("Você não tem permissão para remover essa conversa.");
+        }
+    }
 }

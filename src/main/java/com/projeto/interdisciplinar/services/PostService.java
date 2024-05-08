@@ -71,12 +71,13 @@ public class PostService {
     }
 
     public List<PostsModel> getAllPosts(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 20);
         return this.postRepository.findAll(pageable).getContent();
     }
 
-    public List<PostsModel> getPostsByUser(UUID userId) {
-        return this.postRepository.findByUser(userId);
+    public List<PostsModel> getPostsByUser(UUID userId, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return this.postRepository.findByUser(userId, pageable).getContent();
     }
 
     public PostsModel getUniquePost(UUID postId) {

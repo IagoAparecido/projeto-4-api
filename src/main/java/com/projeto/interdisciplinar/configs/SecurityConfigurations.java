@@ -54,7 +54,8 @@ public class SecurityConfigurations {
                                                                 "/auth/confirm", "/chat")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PATCH, "/users/user/send_code",
-                                                                "/users/user/change_password")
+                                                                "/users/user/change_password",
+                                                                "/messages/{senderId}/{roomId}")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PATCH, "/users/user").hasRole("USER")
                                                 .requestMatchers(HttpMethod.PATCH, "/users/{userId}",
@@ -66,6 +67,8 @@ public class SecurityConfigurations {
                                                                 "/comments/sub_comment/{commentId}",
                                                                 "/comments/comment/{commentId}")
                                                 .hasRole("USER")
+                                                .requestMatchers(HttpMethod.DELETE, "/messages/{senderId}/{messageId}")
+                                                .permitAll()
                                                 .requestMatchers("/wss").permitAll()
                                                 .anyRequest().denyAll())
 

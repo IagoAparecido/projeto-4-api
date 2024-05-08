@@ -3,12 +3,15 @@ package com.projeto.interdisciplinar.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.projeto.interdisciplinar.models.ChatMessage;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
+    private final ChatRoomService chatRoomService;
 
     @MessageMapping("/chat")
     public void processMessage(
@@ -46,10 +50,21 @@ public class ChatController {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
-    // @GetMapping("/messages/{userId}")
-    // public ResponseEntity<List<ChatRoom>> findChatRoom(@PathVariable UUID userId)
-    // {
-    // return ResponseEntity.ok(chatRoomService.getAllChatRoomsByUserId(userId));
-    // }
+    @DeleteMapping("/messages/{senderId}/{messageId}")
+    public ResponseEntity<ChatMessage> remove(@PathVariable UUID messageId, @PathVariable UUID senderId)
+            throws BadRequestException {
+        return ResponseEntity.ok().body(this.chatMessageService.removeMessage(senderId, messageId));
+    }
+
+    @GetMapping("/messages/{userId}")
+    public ResponseEntity<List<ChatRoom>> findChatRoom(@PathVariable UUID userId) {
+        return ResponseEntity.ok(chatRoomService.getAllChatRoomsByUserId(userId));
+    }
+
+    @PatchMapping("/messages/{senderId}/{roomId}")
+    public ResponseEntity<ChatRoom> removeChatRoom(@PathVariable UUID senderId, @PathVariable UUID roomId)
+            throws BadRequestException {
+        return ResponseEntity.ok(chatRoomService.removeChatRoom(senderId, roomId));
+    }
 
 }
