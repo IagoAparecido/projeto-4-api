@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import com.projeto.interdisciplinar.models.PostsModel;
 
 public interface PostRepository extends JpaRepository<PostsModel, UUID> {
+
     Page<PostsModel> findAll(Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM posts WHERE posts.user_id = :userId ORDER BY posts.created_at DESC")
