@@ -1,7 +1,11 @@
 package com.projeto.interdisciplinar.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.coyote.BadRequestException;
@@ -10,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.core.Authentication;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projeto.interdisciplinar.dtos.comments.CreateCommentDTO;
 import com.projeto.interdisciplinar.models.CommentsModel;
 import com.projeto.interdisciplinar.models.SubCommentsModel;
@@ -35,6 +41,30 @@ public class CommentService {
         this.subCommentRepository = subCommentRepository;
     }
 
+    // carregar palavras impróprias do json
+    private List<String> loadWords(String caminhoDoArquivo) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            Map<String, List<String>> jsonMap = objectMapper.readValue(new File(caminhoDoArquivo),
+                    new TypeReference<Map<String, List<String>>>() {
+                    });
+            // extrair a lista de palavras impróprias
+            return jsonMap.get("palavras_improprias");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    // verificar e substituir palavras impróprias em um campo
+    private String verifyWords(String text, List<String> words) {
+        for (String word : words) {
+            text = text.replaceAll("(?i)\\b" + word + "\\b", "*****");
+        }
+        return text;
+    }
+
     public CommentsModel create(CreateCommentDTO createCommentDTO, UUID postId) throws BadRequestException {
 
         try {
@@ -48,8 +78,14 @@ public class CommentService {
             // armazena no banco
             LocalDateTime createdAt = LocalDateTime.now();
             CommentsModel comments = new CommentsModel();
+
+            List<String> words = loadWords("src/main/java/com/projeto/interdisciplinar/configs/words.json");
+
+            // verificar e substituir palavras impróprias
+            String description = verifyWords(createCommentDTO.description(), words);
+
+            comments.setDescription(description);
             comments.setCreated_at(createdAt);
-            comments.setDescription(createCommentDTO.description());
 
             var post = this.postRepository.getReferenceById(postId);
             var user = this.userRepository.getReferenceById(authenticatedUser.getId());
@@ -80,8 +116,14 @@ public class CommentService {
             // armazena no banco
             LocalDateTime createdAt = LocalDateTime.now();
             SubCommentsModel subComments = new SubCommentsModel();
+
+            List<String> words = loadWords("src/main/java/com/projeto/interdisciplinar/configs/words.json");
+
+            // verificar e substituir palavras impróprias
+            String description = verifyWords(createCommentDTO.description(), words);
+
             subComments.setCreated_at(createdAt);
-            subComments.setDescription(createCommentDTO.description());
+            subComments.setDescription(description);
 
             var comment = this.commentRepository.getReferenceById(commentId);
             var user = this.userRepository.getReferenceById(authenticatedUser.getId());
