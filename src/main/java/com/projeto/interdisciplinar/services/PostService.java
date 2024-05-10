@@ -12,11 +12,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projeto.interdisciplinar.dtos.imagesPosts.CreateImagesDTO;
 import com.projeto.interdisciplinar.dtos.posts.CreatePostDTO;
+import com.projeto.interdisciplinar.dtos.posts.GetPostsAndCountDTO;
+import com.projeto.interdisciplinar.dtos.posts.PostsDTO;
 import com.projeto.interdisciplinar.models.ImagesModel;
 import com.projeto.interdisciplinar.models.PostsModel;
 import com.projeto.interdisciplinar.models.UsersModel;
-import com.projeto.interdisciplinar.repositories.ImageRepository;
 import com.projeto.interdisciplinar.repositories.PostRepository;
 import com.projeto.interdisciplinar.repositories.UserRepository;
 
@@ -93,7 +97,7 @@ public class PostService {
         post.setType(type);
         post.setCity(city);
         post.setDescription(description);
-        post.setCreated_at(createdAt);
+        post.setCreatedAt(createdAt);
         post.setUser(user);
 
         var response = this.postRepository.save(post);
@@ -112,14 +116,32 @@ public class PostService {
         return response;
     }
 
-    public List<PostsModel> getAllPosts(int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        return this.postRepository.findAll(pageable).getContent();
+    public GetPostsAndCountDTO getAllPosts(int page) {
+
+        var posts = this.postRepository.findAll(PageRequest.of(page, 20, Sort.Direction.DESC, "createdAt"))
+                .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
+                        post.getUF(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
+                        post.getCreatedAt(), post.getUser(),
+                        post.getImages()));
+
+        var response = new GetPostsAndCountDTO(posts.getContent(), posts.getTotalPages());
+        return response;
+
     }
 
-    public List<PostsModel> getAllPostsByRegion(String region, int page) {
+    public GetPostsAndCountDTO getAllPostsByRegion(String region, int page) {
         Pageable pageable = PageRequest.of(page, 20);
-        return this.postRepository.findAllByRegion(region.toUpperCase(), pageable).getContent();
+
+        var postsPage = this.postRepository.findAllByRegion(region.toUpperCase(), pageable);
+        List<PostsDTO> postsDTOs = postsPage.getContent().stream()
+                .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
+                        post.getUF(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
+                        post.getCreatedAt(), post.getUser(),
+                        post.getImages()))
+                .collect(Collectors.toList());
+
+        return new GetPostsAndCountDTO(postsDTOs, postsPage.getTotalPages());
+
     }
 
     public List<PostsModel> getPostsByUser(UUID userId, int page) {

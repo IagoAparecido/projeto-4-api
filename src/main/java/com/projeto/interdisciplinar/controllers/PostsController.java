@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projeto.interdisciplinar.dtos.posts.CreatePostDTO;
+import com.projeto.interdisciplinar.dtos.posts.GetPostsAndCountDTO;
 import com.projeto.interdisciplinar.models.PostsModel;
 import com.projeto.interdisciplinar.services.PostService;
 
@@ -32,12 +33,12 @@ public class PostsController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<PostsModel>> getAllPosts(@RequestParam int page) {
+    public ResponseEntity<GetPostsAndCountDTO> getAllPosts(@RequestParam int page) {
         return ResponseEntity.ok().body(this.postService.getAllPosts(page));
     }
 
     @GetMapping("/{region}")
-    public ResponseEntity<List<PostsModel>> getPostsByRegion(@PathVariable String region, @RequestParam int page) {
+    public ResponseEntity<GetPostsAndCountDTO> getPostsByRegion(@PathVariable String region, @RequestParam int page) {
         return ResponseEntity.ok().body(this.postService.getAllPostsByRegion(region, page));
     }
 

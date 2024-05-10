@@ -55,7 +55,7 @@ public class PostsModel {
     @Column(nullable = false)
     private String sex;
 
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     // fk
     @ManyToOne()
