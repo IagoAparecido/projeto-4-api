@@ -42,7 +42,7 @@ public class SecurityConfigurations {
                                                 .requestMatchers(HttpMethod.GET, "/users", "users/admin")
                                                 .hasRole("ADMIN")
                                                 .requestMatchers(HttpMethod.GET, "/posts", "/posts/user/{userId}",
-                                                                "/posts/post/{postId}")
+                                                                "/posts/post/{postId}", "/posts/{region}")
                                                 .hasRole("USER")
                                                 .requestMatchers(HttpMethod.POST, "/auth/register/admin")
                                                 .hasRole("ADMIN")

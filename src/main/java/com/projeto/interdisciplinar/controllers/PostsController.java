@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,11 @@ public class PostsController {
     @GetMapping("")
     public ResponseEntity<List<PostsModel>> getAllPosts(@RequestParam int page) {
         return ResponseEntity.ok().body(this.postService.getAllPosts(page));
+    }
+
+    @GetMapping("/{region}")
+    public ResponseEntity<List<PostsModel>> getPostsByRegion(@PathVariable String region, @RequestParam int page) {
+        return ResponseEntity.ok().body(this.postService.getAllPostsByRegion(region, page));
     }
 
     @GetMapping("/user/{userId}")

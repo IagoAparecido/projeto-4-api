@@ -30,7 +30,6 @@ import com.projeto.interdisciplinar.repositories.UserRepository;
 public class PostService {
     private PostRepository postRepository;
     private UserRepository userRepository;
-    private ImageRepository imageRepository;
     private ImageService imageService;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, ImageService imageService,
@@ -38,7 +37,6 @@ public class PostService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.imageService = imageService;
-        this.imageRepository = imageRepository;
     }
 
     public PostsModel create(CreatePostDTO createPostDTO) {
@@ -73,6 +71,11 @@ public class PostService {
     public List<PostsModel> getAllPosts(int page) {
         Pageable pageable = PageRequest.of(page, 20);
         return this.postRepository.findAll(pageable).getContent();
+    }
+
+    public List<PostsModel> getAllPostsByRegion(String region, int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return this.postRepository.findAllByRegion(region.toUpperCase(), pageable).getContent();
     }
 
     public List<PostsModel> getPostsByUser(UUID userId, int page) {

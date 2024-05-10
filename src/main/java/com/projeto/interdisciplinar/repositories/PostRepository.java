@@ -15,6 +15,9 @@ public interface PostRepository extends JpaRepository<PostsModel, UUID> {
 
     Page<PostsModel> findAll(Pageable pageable);
 
+    @Query(nativeQuery = true, value = "Select * FROM posts WHERE posts.uf = ?1")
+    Page<PostsModel> findAllByRegion(String region, Pageable pageable);
+
     @Query(nativeQuery = true, value = "SELECT * FROM posts WHERE posts.user_id = :userId ORDER BY posts.created_at DESC")
     Page<PostsModel> findByUser(@Param("userId") UUID userId, Pageable pageable);
 }
