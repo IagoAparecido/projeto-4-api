@@ -111,10 +111,10 @@ public class UserService {
         try {
             var user = this.userRepository.getReferenceById(userId);
 
-            if (user.getStatus().toString().equals("AUTHORIZED")) {
+            if (user.getStatus().equals(Status.AUTHORIZED)) {
                 user.setStatus(Status.UNAUTHORIZED);
 
-            } else if (user.getStatus().toString().equals("UNAUTHORIZED")) {
+            } else if (user.getStatus().equals(Status.UNAUTHORIZED)) {
                 user.setStatus(Status.AUTHORIZED);
 
             }

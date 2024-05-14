@@ -30,6 +30,7 @@ import com.projeto.interdisciplinar.dtos.imagesPosts.CreateImagesDTO;
 import com.projeto.interdisciplinar.dtos.posts.CreatePostDTO;
 import com.projeto.interdisciplinar.dtos.posts.GetPostsAndCountDTO;
 import com.projeto.interdisciplinar.dtos.posts.PostsDTO;
+import com.projeto.interdisciplinar.enums.Status;
 import com.projeto.interdisciplinar.models.ImagesModel;
 import com.projeto.interdisciplinar.models.PostsModel;
 import com.projeto.interdisciplinar.models.UsersModel;
@@ -72,12 +73,16 @@ public class PostService {
         return text;
     }
 
-    public PostsModel create(CreatePostDTO createPostDTO) {
+    public PostsModel create(CreatePostDTO createPostDTO) throws BadRequestException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UUID authenticatedUserId = ((UsersModel) authentication.getPrincipal()).getId();
 
         var user = this.userRepository.getReferenceById(authenticatedUserId);
+
+        if (user.getStatus().equals(Status.UNAUTHORIZED)) {
+            throw new BadRequestException("Usuário não autorizado a realizar essa operação.");
+        }
 
         LocalDateTime createdAt = LocalDateTime.now();
         PostsModel post = new PostsModel();

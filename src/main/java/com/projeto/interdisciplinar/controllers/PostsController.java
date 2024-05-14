@@ -53,7 +53,8 @@ public class PostsController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<PostsModel> register(@ModelAttribute @Valid CreatePostDTO postDTO) {
+    public ResponseEntity<PostsModel> register(@ModelAttribute @Valid CreatePostDTO postDTO)
+            throws BadRequestException {
         return ResponseEntity.ok().body(this.postService.create(postDTO));
     }
 

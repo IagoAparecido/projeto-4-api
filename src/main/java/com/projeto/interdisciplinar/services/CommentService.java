@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projeto.interdisciplinar.dtos.comments.CreateCommentDTO;
+import com.projeto.interdisciplinar.enums.Status;
 import com.projeto.interdisciplinar.models.CommentsModel;
 import com.projeto.interdisciplinar.models.SubCommentsModel;
 import com.projeto.interdisciplinar.models.UsersModel;
@@ -65,6 +66,7 @@ public class CommentService {
         return text;
     }
 
+    // criar comntário
     public CommentsModel create(CreateCommentDTO createCommentDTO, UUID postId) throws BadRequestException {
 
         try {
@@ -73,6 +75,10 @@ public class CommentService {
 
             if (createCommentDTO.description().isEmpty()) {
                 throw new BadRequestException("Comentário vazio.");
+            }
+
+            if (authenticatedUser.getStatus().equals(Status.UNAUTHORIZED)) {
+                throw new BadRequestException("Usuário não autorizado a realizar essa operação.");
             }
 
             // armazena no banco
@@ -101,6 +107,7 @@ public class CommentService {
 
     }
 
+    // criar subcomentário
     public SubCommentsModel createSubComment(CreateCommentDTO createCommentDTO, UUID commentId)
 
             throws BadRequestException {
@@ -111,6 +118,10 @@ public class CommentService {
 
             if (createCommentDTO.description().isEmpty()) {
                 throw new BadRequestException("Comentário vazio.");
+            }
+
+            if (authenticatedUser.getStatus().equals(Status.UNAUTHORIZED)) {
+                throw new BadRequestException("Usuário não autorizado a realizar essa operação.");
             }
 
             // armazena no banco
