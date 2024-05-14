@@ -122,7 +122,7 @@ public class PostService {
                 .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
                         post.getUF(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
                         post.getCreatedAt(), post.getUser(),
-                        post.getImages()));
+                        post.getImages(), post.getComments()));
 
         var response = new GetPostsAndCountDTO(posts.getContent(), posts.getTotalPages());
         return response;
@@ -137,7 +137,7 @@ public class PostService {
                 .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
                         post.getUF(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
                         post.getCreatedAt(), post.getUser(),
-                        post.getImages()))
+                        post.getImages(), post.getComments()))
                 .collect(Collectors.toList());
 
         return new GetPostsAndCountDTO(postsDTOs, postsPage.getTotalPages());

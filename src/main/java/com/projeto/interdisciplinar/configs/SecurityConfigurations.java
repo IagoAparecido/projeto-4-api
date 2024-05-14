@@ -48,7 +48,7 @@ public class SecurityConfigurations {
                                                 .hasRole("ADMIN")
                                                 .requestMatchers(HttpMethod.POST, "/posts/post",
                                                                 "/comments/comment/{postId}",
-                                                                "/comments/sub_comment/{postId}")
+                                                                "/comments/sub_comment/{postId}", "/messages/block")
                                                 .hasRole("USER")
                                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register",
                                                                 "/auth/confirm", "/chat")

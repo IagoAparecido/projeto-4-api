@@ -26,6 +26,7 @@ import com.projeto.interdisciplinar.dtos.user.UpdatePasswordDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateStatusDTO;
 import com.projeto.interdisciplinar.dtos.user.UpdateUserDTO;
 import com.projeto.interdisciplinar.enums.Roles;
+import com.projeto.interdisciplinar.enums.Status;
 import com.projeto.interdisciplinar.models.UsersModel;
 import com.projeto.interdisciplinar.repositories.UserRepository;
 
@@ -105,14 +106,18 @@ public class UserService {
     }
 
     // update do status do usuário
-    public UsersModel updateStatus(UUID userId,
-            UpdateStatusDTO updateStatus) throws BadRequestException {
+    public UsersModel updateStatus(UUID userId) throws BadRequestException {
 
         try {
             var user = this.userRepository.getReferenceById(userId);
 
-            if (updateStatus.status() != null)
-                user.setStatus(updateStatus.status());
+            if (user.getStatus().toString().equals("AUTHORIZED")) {
+                user.setStatus(Status.UNAUTHORIZED);
+
+            } else if (user.getStatus().toString().equals("UNAUTHORIZED")) {
+                user.setStatus(Status.AUTHORIZED);
+
+            }
 
             return this.userRepository.save(user);
 

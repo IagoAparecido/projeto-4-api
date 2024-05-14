@@ -81,10 +81,9 @@ public class UsersController {
 
     // Bloquear usuário
     @PatchMapping("/user/block/{userId}")
-    public ResponseEntity<UsersModel> updateUser(@PathVariable UUID userId,
-            @RequestBody @Valid UpdateStatusDTO updateStatus)
+    public ResponseEntity<UsersModel> updateUser(@PathVariable UUID userId)
             throws BadRequestException {
-        return ResponseEntity.ok().body(this.userService.updateStatus(userId, updateStatus));
+        return ResponseEntity.ok().body(this.userService.updateStatus(userId));
     }
 
     // confirmar email para troca de senha

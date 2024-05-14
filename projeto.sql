@@ -21,6 +21,20 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: blacklist; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blacklist (
+    id uuid NOT NULL,
+    created_at timestamp(6) without time zone,
+    user_id uuid NOT NULL,
+    user_blocked_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.blacklist OWNER TO postgres;
+
+--
 -- Name: chat_message; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -154,6 +168,14 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO postgres;
 
 --
+-- Name: blacklist blacklist_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blacklist
+    ADD CONSTRAINT blacklist_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: chat_message chat_message_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -242,6 +264,14 @@ ALTER TABLE ONLY public.comments
 
 
 --
+-- Name: blacklist fk8rrfcw4ypm4eayqtfu53tkl9r; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blacklist
+    ADD CONSTRAINT fk8rrfcw4ypm4eayqtfu53tkl9r FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: images fkcp0pycisii8ub3q4b7x5mfpn1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -263,6 +293,14 @@ ALTER TABLE ONLY public.comments
 
 ALTER TABLE ONLY public.sub_comments
     ADD CONSTRAINT fkkbgycvypkn7psmevbawlwimvi FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: blacklist fknkrao3lm1c1etw3xcyntf2mf2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blacklist
+    ADD CONSTRAINT fknkrao3lm1c1etw3xcyntf2mf2 FOREIGN KEY (user_blocked_id) REFERENCES public.users(id);
 
 
 --
