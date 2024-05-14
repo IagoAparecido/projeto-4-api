@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.projeto.interdisciplinar.models.ChatMessage;
 import com.projeto.interdisciplinar.models.UsersModel;
+import com.projeto.interdisciplinar.repositories.BlacklistRepository;
 import com.projeto.interdisciplinar.repositories.ChatMessageRepository;
 import com.projeto.interdisciplinar.repositories.ChatRoomRespository;
 
@@ -25,10 +26,17 @@ public class ChatMessageService {
     private final ChatMessageRepository repository;
     private final ChatRoomRespository roomRespository;
     private final ChatRoomService chatRoomService;
+    private final BlacklistRepository blacklistRepository;
 
-    public ChatMessage save(ChatMessage chatMessage) {
+    public ChatMessage save(ChatMessage chatMessage) throws BadRequestException {
         var chatId = chatRoomService.getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true)
                 .orElseThrow();
+
+        var isBlocked = blacklistRepository.alreadyExist(chatMessage.getRecipientId(), chatMessage.getSenderId());
+
+        if (isBlocked != null) {
+            throw new BadRequestException("Usuário não autorizado a realizar essa operação.");
+        }
 
         var room = roomRespository.findChatId(chatId, chatMessage.getSenderId());
 

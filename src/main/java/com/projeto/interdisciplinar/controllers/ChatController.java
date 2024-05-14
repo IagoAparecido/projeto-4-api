@@ -36,7 +36,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(
-            @Payload ChatMessage chatMessage) {
+            @Payload ChatMessage chatMessage) throws BadRequestException {
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
         messagingTemplate.convertAndSendToUser(chatMessage.getRecipientId().toString(), "/queue/messages",
                 ChatNotification.builder()
