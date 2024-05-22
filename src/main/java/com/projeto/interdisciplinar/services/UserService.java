@@ -168,7 +168,7 @@ public class UserService {
 
         try {
             if (new BCryptPasswordEncoder().matches(code, user.getCode_password())) {
-                user.setCode_password(null);
+
             } else {
                 throw new BadRequestException("Código inválido");
             }
@@ -181,13 +181,20 @@ public class UserService {
     }
 
     // Update da senha / esqueci a senha
-    public UsersModel changePassword(String email, UpdatePasswordDTO updatePasswordDTO) throws BadRequestException {
+    public UsersModel changePassword(String email, UpdatePasswordDTO updatePasswordDTO, String code)
+            throws BadRequestException {
 
         try {
             var user = (UsersModel) this.userRepository.findByEmail(email.toLowerCase());
 
             if (user == null) {
                 throw new BadRequestException("Usuário não encontrado");
+            }
+
+            if (new BCryptPasswordEncoder().matches(code, user.getCode_password())) {
+                user.setCode_password(null);
+            } else {
+                throw new BadRequestException("Código inválido");
             }
 
             String rashPassword = new BCryptPasswordEncoder().encode(updatePasswordDTO.password());

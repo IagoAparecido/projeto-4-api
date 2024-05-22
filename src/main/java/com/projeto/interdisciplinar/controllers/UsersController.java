@@ -102,10 +102,10 @@ public class UsersController {
 
     // troca de senha / esqueci a senha
     @PatchMapping("/user/change_password")
-    public ResponseEntity<UsersModel> changePassword(@RequestParam String email,
+    public ResponseEntity<UsersModel> changePassword(@RequestParam String email, @RequestParam String code,
             @RequestBody @Valid UpdatePasswordDTO updatePasswordDTO)
             throws BadRequestException {
-        return ResponseEntity.ok().body(this.userService.changePassword(email, updatePasswordDTO));
+        return ResponseEntity.ok().body(this.userService.changePassword(email, updatePasswordDTO, code));
     }
 
 }
