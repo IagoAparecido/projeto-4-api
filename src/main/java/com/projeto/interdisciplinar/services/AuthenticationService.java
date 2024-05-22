@@ -52,7 +52,7 @@ public class AuthenticationService {
 
     // login
     public ResponseEntity<TokenDTO> login(AuthenticationDTO authenticationDTO) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.email(),
+        var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.email().toLowerCase(),
                 authenticationDTO.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
@@ -82,14 +82,14 @@ public class AuthenticationService {
 
     // create de usuários
     public UsersModel create(UserDTO userDTO, String role) {
-        if (this.userRepository.findByEmail(userDTO.email()) != null)
+        if (this.userRepository.findByEmail(userDTO.email().toLowerCase()) != null)
             throw new RuntimeException("Email já existente.");
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.password());
         LocalDateTime createdAt = LocalDateTime.now();
 
         UsersModel user = new UsersModel();
-        user.setEmail(userDTO.email());
+        user.setEmail(userDTO.email().toLowerCase());
         user.setName(userDTO.name());
         user.setStatus(Status.AUTHORIZED);
         user.setAuthenticated(role == "ADMIN" ? true : false);
@@ -103,7 +103,7 @@ public class AuthenticationService {
         user.setCode(code);
 
         if (role == "USER") {
-            this.emailService.sendEmail(user.getEmail(), "Confirmação do cadastro.",
+            this.emailService.sendEmail(user.getEmail().toLowerCase(), "Confirmação do cadastro.",
                     "Ultilize o código: " + rawCode + " para confirmar seu cadastro.");
         }
 
@@ -115,7 +115,7 @@ public class AuthenticationService {
     public UsersModel confirmEmail(String email, String code)
             throws BadRequestException {
 
-        var user = (UsersModel) this.userRepository.findByEmail(email);
+        var user = (UsersModel) this.userRepository.findByEmail(email.toLowerCase());
 
         if (user == null) {
             throw new BadRequestException("Usuário não encontrado");
@@ -140,7 +140,7 @@ public class AuthenticationService {
     public UsersModel resendCode(String email)
             throws BadRequestException {
 
-        var user = (UsersModel) this.userRepository.findByEmail(email);
+        var user = (UsersModel) this.userRepository.findByEmail(email.toLowerCase());
 
         if (user == null) {
             throw new BadRequestException("Usuário não encontrado");

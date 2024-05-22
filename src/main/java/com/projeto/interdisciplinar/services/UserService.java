@@ -136,7 +136,7 @@ public class UserService {
     public UsersModel sendCode(String email)
             throws BadRequestException {
 
-        var user = (UsersModel) this.userRepository.findByEmail(email);
+        var user = (UsersModel) this.userRepository.findByEmail(email.toLowerCase());
 
         if (user == null) {
             throw new BadRequestException("Usuário não encontrado");
@@ -160,7 +160,7 @@ public class UserService {
     // confirmar email / esqueci a senha
     public UsersModel confirmEmail(String email, String code) throws BadRequestException {
 
-        var user = (UsersModel) this.userRepository.findByEmail(email);
+        var user = (UsersModel) this.userRepository.findByEmail(email.toLowerCase());
 
         if (user == null) {
             throw new BadRequestException("Usuário não encontrado");
@@ -184,7 +184,7 @@ public class UserService {
     public UsersModel changePassword(String email, UpdatePasswordDTO updatePasswordDTO) throws BadRequestException {
 
         try {
-            var user = (UsersModel) this.userRepository.findByEmail(email);
+            var user = (UsersModel) this.userRepository.findByEmail(email.toLowerCase());
 
             if (user == null) {
                 throw new BadRequestException("Usuário não encontrado");

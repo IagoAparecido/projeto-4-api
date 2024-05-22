@@ -29,6 +29,7 @@ public class ChatMessageService {
     private final BlacklistRepository blacklistRepository;
 
     public ChatMessage save(ChatMessage chatMessage) throws BadRequestException {
+
         var chatId = chatRoomService.getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true)
                 .orElseThrow();
 
