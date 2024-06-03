@@ -33,7 +33,7 @@ public class SecurityConfigurations {
                                 .authorizeHttpRequests(authorize -> authorize
                                                 .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR)
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.GET, "/uploads/users/**", "/auth/token",
+                                                .requestMatchers(HttpMethod.GET, "/uploads/*/**", "/auth/token",
                                                                 "/auth/confirm/resend",
                                                                 "/users/user/confirm_email",
                                                                 "/messages/{senderId}/{recipientId}",
