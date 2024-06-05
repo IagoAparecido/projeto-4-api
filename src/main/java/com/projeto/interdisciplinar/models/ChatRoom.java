@@ -35,6 +35,7 @@ public class ChatRoom {
     private UUID recipientId;
     private Boolean status;
     private LocalDateTime createdAt;
+    private String lastMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender")

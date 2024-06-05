@@ -46,9 +46,16 @@ public class ChatMessageService {
         if (room.getStatus().equals(false) || room2.getStatus().equals(false)) {
             room.setStatus(true);
             room2.setStatus(true);
+
             roomRespository.save(room);
             roomRespository.save(room2);
         }
+
+        room.setLastMessage(chatMessage.getContent());
+        room2.setLastMessage(chatMessage.getContent());
+
+        roomRespository.save(room);
+        roomRespository.save(room2);
 
         chatMessage.setChatId(chatId);
         chatMessage.setTimestamp(LocalDateTime.now());

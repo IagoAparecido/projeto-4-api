@@ -1,12 +1,7 @@
 package com.projeto.interdisciplinar.models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
-
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

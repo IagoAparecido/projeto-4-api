@@ -9,6 +9,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import com.projeto.interdisciplinar.models.ChatRoom;
+import com.projeto.interdisciplinar.repositories.ChatMessageRepository;
 import com.projeto.interdisciplinar.repositories.ChatRoomRespository;
 import com.projeto.interdisciplinar.repositories.UserRepository;
 
@@ -20,6 +21,7 @@ public class ChatRoomService {
 
     private final ChatRoomRespository chatRoomRespository;
     private final UserRepository userRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     public Optional<UUID> getChatRoomId(
             UUID senderId, UUID recipientId, boolean createNewRoomIfNotExists) {
@@ -40,6 +42,7 @@ public class ChatRoomService {
 
         var recipient = this.userRepository.getReferenceById(recipientId);
         var sender = this.userRepository.getReferenceById(senderId);
+        var lastMessage = this.chatMessageRepository.getLastMessages(senderId);
 
         LocalDateTime createdAt = LocalDateTime.now();
 
@@ -50,6 +53,7 @@ public class ChatRoomService {
                 .status(true)
                 .sender(recipient)
                 .createdAt(createdAt)
+                .lastMessage(lastMessage)
                 .build();
 
         ChatRoom recipientSender = ChatRoom.builder()
@@ -58,6 +62,7 @@ public class ChatRoomService {
                 .recipientId(senderId)
                 .status(true)
                 .sender(sender)
+                .lastMessage(lastMessage)
                 .createdAt(createdAt)
                 .build();
 
