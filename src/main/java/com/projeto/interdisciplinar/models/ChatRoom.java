@@ -36,6 +36,7 @@ public class ChatRoom {
     private Boolean status;
     private LocalDateTime createdAt;
     private String lastMessage;
+    private Boolean isBlocked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender")

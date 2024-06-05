@@ -1,5 +1,7 @@
 package com.projeto.interdisciplinar.models;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -25,4 +27,5 @@ public class ChatNotification {
     private UUID senderId;
     private UUID recipientId;
     private String content;
+    private String timestamp;
 }

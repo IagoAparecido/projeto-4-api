@@ -52,6 +52,7 @@ public class ChatRoomService {
                 .recipientId(recipientId)
                 .status(true)
                 .sender(recipient)
+                .isBlocked(false)
                 .createdAt(createdAt)
                 .lastMessage(lastMessage)
                 .build();
@@ -61,6 +62,7 @@ public class ChatRoomService {
                 .senderId(recipientId)
                 .recipientId(senderId)
                 .status(true)
+                .isBlocked(false)
                 .sender(sender)
                 .lastMessage(lastMessage)
                 .createdAt(createdAt)

@@ -1,6 +1,7 @@
 package com.projeto.interdisciplinar.models;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;

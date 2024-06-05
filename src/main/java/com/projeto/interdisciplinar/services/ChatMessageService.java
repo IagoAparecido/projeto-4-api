@@ -38,6 +38,7 @@ public class ChatMessageService {
 
         if (isBlocked != null) {
             throw new BadRequestException("Usuário não autorizado a realizar essa operação.");
+
         }
 
         var room = roomRespository.findChatId(chatId, chatMessage.getSenderId());
