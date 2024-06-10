@@ -19,7 +19,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -107,17 +106,18 @@ public class PostService {
 
         var response = this.postRepository.save(post);
 
-        for (int i = 0; i < createPostDTO.image().size(); i++) {
-            try {
-                this.imageService.create(new CreateImagesDTO(
-                        createPostDTO.image().get(i).getOriginalFilename(),
-                        createPostDTO.image().get(i),
-                        response.getId()));
-            } catch (BadRequestException | FileSystemException e) {
-                e.printStackTrace();
+        if (createPostDTO.image() != null) {
+            for (int i = 0; i < createPostDTO.image().size(); i++) {
+                try {
+                    this.imageService.create(new CreateImagesDTO(
+                            createPostDTO.image().get(i).getOriginalFilename(),
+                            createPostDTO.image().get(i),
+                            response.getId()));
+                } catch (BadRequestException | FileSystemException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
         return response;
     }
 
@@ -125,7 +125,7 @@ public class PostService {
 
         var posts = this.postRepository.findAll(PageRequest.of(page, 20, Sort.Direction.DESC, "createdAt"))
                 .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
-                        post.getUF(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
+                        post.getUf(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
                         post.getCreatedAt(), post.getUser(),
                         post.getImages(), post.getComments()));
 
@@ -140,7 +140,7 @@ public class PostService {
         var postsPage = this.postRepository.findAllByRegion(region.toUpperCase(), pageable);
         List<PostsDTO> postsDTOs = postsPage.getContent().stream()
                 .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
-                        post.getUF(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
+                        post.getUf(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
                         post.getCreatedAt(), post.getUser(),
                         post.getImages(), post.getComments()))
                 .collect(Collectors.toList());

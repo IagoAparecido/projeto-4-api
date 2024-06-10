@@ -1,7 +1,6 @@
 package com.projeto.interdisciplinar.dtos.posts;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +13,7 @@ public record CreatePostDTO(
         @NotNull String sex,
         @NotNull String type,
         @NotNull String description,
-        @NotNull String UF,
+        @NotNull String uf,
 
         List<MultipartFile> image,
 

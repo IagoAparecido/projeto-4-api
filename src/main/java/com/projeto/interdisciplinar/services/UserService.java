@@ -90,10 +90,10 @@ public class UserService {
 
             var user = this.userRepository.getReferenceById(authenticatedUserId);
 
-            if (!updateUserDTO.name().isEmpty())
+            if (updateUserDTO.name() != null)
                 user.setName(updateUserDTO.name());
 
-            if (!updateUserDTO.password().isEmpty()) {
+            if (updateUserDTO.password() != null) {
                 String encryptedPassword = new BCryptPasswordEncoder().encode(updateUserDTO.password());
                 user.setPassword(encryptedPassword);
             }

@@ -42,7 +42,7 @@ public class PostsModel {
     private String description;
 
     @Column(nullable = false)
-    private String UF;
+    private String uf;
 
     @Column(nullable = false)
     private String city;

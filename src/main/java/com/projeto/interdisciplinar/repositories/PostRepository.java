@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.projeto.interdisciplinar.dtos.posts.PostsDTO;
 import com.projeto.interdisciplinar.models.PostsModel;
 
 public interface PostRepository extends JpaRepository<PostsModel, UUID> {

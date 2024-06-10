@@ -13,7 +13,7 @@ public record PostsDTO(
                 String name,
                 String age,
                 String description,
-                String UF,
+                String uf,
                 String city,
                 String sex,
                 String type,
