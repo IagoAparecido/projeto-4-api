@@ -28,6 +28,7 @@ public class ChatMessageService {
     private final ChatRoomService chatRoomService;
     private final BlacklistRepository blacklistRepository;
 
+    // criar mensagem
     public ChatMessage save(ChatMessage chatMessage) throws BadRequestException {
 
         var chatId = chatRoomService.getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true)
@@ -37,15 +38,25 @@ public class ChatMessageService {
 
         if (isBlocked != null) {
             throw new BadRequestException("Usuário não autorizado a realizar essa operação.");
+
         }
 
         var room = roomRespository.findChatId(chatId, chatMessage.getSenderId());
+        var room2 = roomRespository.findChatId(chatId, chatMessage.getRecipientId());
 
-        if (room.getStatus().equals(false)) {
-
+        if (room.getStatus().equals(false) || room2.getStatus().equals(false)) {
             room.setStatus(true);
+            room2.setStatus(true);
+
             roomRespository.save(room);
+            roomRespository.save(room2);
         }
+
+        room.setLastMessage(chatMessage.getContent());
+        room2.setLastMessage(chatMessage.getContent());
+
+        roomRespository.save(room);
+        roomRespository.save(room2);
 
         chatMessage.setChatId(chatId);
         chatMessage.setTimestamp(LocalDateTime.now());
@@ -55,12 +66,14 @@ public class ChatMessageService {
         return chatMessage;
     };
 
+    // get das mensagens
     public List<ChatMessage> findChatMessages(UUID senderId, UUID recipientId) {
         var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
 
         return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
     };
 
+    // apagar mensagem
     public ChatMessage removeMessage(UUID senderId, UUID messageId) throws BadRequestException {
         var message = repository.findById(messageId);
 

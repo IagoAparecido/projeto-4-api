@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import org.apache.coyote.BadRequestException;
 
 import com.projeto.interdisciplinar.dtos.imagesPosts.CreateImagesDTO;

@@ -44,9 +44,11 @@ public class ChatController {
                         .senderId(savedMsg.getSenderId())
                         .recipientId(savedMsg.getRecipientId())
                         .content(savedMsg.getContent())
+                        .timestamp(savedMsg.getTimestamp().toString())
                         .build());
     }
 
+    // get mensagens
     @GetMapping("/messages/{senderId}/{recipientId}")
     public ResponseEntity<List<ChatMessage>> findChatMessages(
             @PathVariable("senderId") UUID senderId,
@@ -54,26 +56,37 @@ public class ChatController {
         return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
+    // remover mensagens
     @DeleteMapping("/messages/{senderId}/{messageId}")
     public ResponseEntity<ChatMessage> remove(@PathVariable UUID messageId, @PathVariable UUID senderId)
             throws BadRequestException {
         return ResponseEntity.ok().body(this.chatMessageService.removeMessage(senderId, messageId));
     }
 
+    // Get conversas
     @GetMapping("/messages/{userId}")
     public ResponseEntity<List<ChatRoom>> findChatRoom(@PathVariable UUID userId) {
         return ResponseEntity.ok(chatRoomService.getAllChatRoomsByUserId(userId));
     }
 
+    // remover conversas
     @PatchMapping("/messages/{senderId}/{roomId}")
     public ResponseEntity<ChatRoom> removeChatRoom(@PathVariable UUID senderId, @PathVariable UUID roomId)
             throws BadRequestException {
         return ResponseEntity.ok(chatRoomService.removeChatRoom(senderId, roomId));
     }
 
+    // bloquear usuário
     @PostMapping("/messages/block")
     public ResponseEntity<BlacklistModel> blockUser(@RequestParam UUID id) throws BadRequestException {
         return ResponseEntity.ok(blacklistService.block(id));
+    }
+
+    // get dos users bloqueados
+    @GetMapping("/messages/block")
+    public ResponseEntity<List<BlacklistModel>> getBlockedUsers() throws BadRequestException {
+        return ResponseEntity.ok(blacklistService.findUsersBlocked());
+
     }
 
 }
