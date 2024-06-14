@@ -38,6 +38,8 @@ public class ChatRoom {
     private String lastMessage;
     private Boolean isBlocked;
 
+    private Boolean read;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender")
     private UsersModel sender;

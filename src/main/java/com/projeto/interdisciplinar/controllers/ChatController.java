@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,6 +88,14 @@ public class ChatController {
     public ResponseEntity<List<BlacklistModel>> getBlockedUsers() throws BadRequestException {
         return ResponseEntity.ok(blacklistService.findUsersBlocked());
 
+    }
+
+    // Get se tem notificação
+    @GetMapping("/messages/notification")
+    public ResponseEntity<Boolean> hasUnreadMessages() throws BadRequestException {
+        boolean hasUnread = chatRoomService.hasUnreadMessages();
+
+        return ResponseEntity.ok(hasUnread);
     }
 
 }

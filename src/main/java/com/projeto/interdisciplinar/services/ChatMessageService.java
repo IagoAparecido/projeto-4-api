@@ -55,6 +55,8 @@ public class ChatMessageService {
         room.setLastMessage(chatMessage.getContent());
         room2.setLastMessage(chatMessage.getContent());
 
+        room2.setRead(false);
+
         roomRespository.save(room);
         roomRespository.save(room2);
 
@@ -69,6 +71,14 @@ public class ChatMessageService {
     // get das mensagens
     public List<ChatMessage> findChatMessages(UUID senderId, UUID recipientId) {
         var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
+        var chatIdRoom = chatRoomService.getChatRoomId(senderId, recipientId, false)
+                .orElseThrow();
+
+        var room = roomRespository.findChatId(chatIdRoom, senderId);
+        // var room2 = roomRespository.findChatId(chatIdRoom, recipientId);
+
+        room.setRead(true);
+        roomRespository.save(room);
 
         return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
     };

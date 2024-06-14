@@ -4,11 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.coyote.BadRequestException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.projeto.interdisciplinar.models.ChatRoom;
+import com.projeto.interdisciplinar.models.UsersModel;
 import com.projeto.interdisciplinar.repositories.ChatMessageRepository;
 import com.projeto.interdisciplinar.repositories.ChatRoomRespository;
 import com.projeto.interdisciplinar.repositories.UserRepository;
@@ -76,6 +80,16 @@ public class ChatRoomService {
     // get das salas de conversas dos usuários
     public List<ChatRoom> getAllChatRoomsByUserId(UUID userId) {
         return chatRoomRespository.findChatRooms(userId);
+    }
+
+    // tem notificação??
+    public boolean hasUnreadMessages() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UsersModel authenticatedUser = (UsersModel) authentication.getPrincipal();
+
+        List<ChatRoom> chatRooms = chatRoomRespository.findChatRooms(authenticatedUser.getId());
+        return chatRooms.stream()
+                .anyMatch(chatRoom -> Boolean.FALSE.equals(chatRoom.getRead()));
     }
 
     // remover as salas de conversas
