@@ -51,7 +51,8 @@ public class SecurityConfigurations {
                                                                 "/comments/comment/{postId}",
                                                                 "/comments/sub_comment/{postId}", "/messages/block")
                                                 .hasRole("USER")
-                                                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register",
+                                                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/login-dash",
+                                                                "/auth/register",
                                                                 "/auth/confirm", "/chat")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PATCH, "/users/user/send_code",
@@ -60,6 +61,7 @@ public class SecurityConfigurations {
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PATCH, "/users/user").hasRole("USER")
                                                 .requestMatchers(HttpMethod.PATCH, "/users/{userId}",
+                                                                "/users/admin/{userId}",
                                                                 "/users/user/block/{userId}")
                                                 .hasRole("ADMIN")
                                                 .requestMatchers(HttpMethod.PATCH, "/users/{userId}/image")

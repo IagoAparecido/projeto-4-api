@@ -80,10 +80,30 @@ public class AuthenticationService {
         return ResponseEntity.ok().body(new TokenDTO(token));
     }
 
+    // login dash
+    public ResponseEntity<TokenDTO> loginDash(AuthenticationDTO authenticationDTO) throws BadRequestException {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.email().toLowerCase(),
+                authenticationDTO.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        // verifica se o user esta autenticado
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        UsersModel user = (UsersModel) userDetails;
+        if (user.getRole().equals(Roles.ADMIN)) {
+
+            var token = tokenService.genarateToken(user);
+            return ResponseEntity.ok().body(new TokenDTO(token));
+        } else {
+            throw new BadRequestException("Usuário não encontrado");
+        }
+
+    }
+
     // create de usuários
-    public UsersModel create(UserDTO userDTO, String role) {
-        if (this.userRepository.findByEmail(userDTO.email().toLowerCase()) != null)
-            throw new RuntimeException("Email já existente.");
+    public UsersModel create(UserDTO userDTO, String role) throws BadRequestException {
+        if (this.userRepository.findByEmail(userDTO.email().toLowerCase()) != null) {
+            throw new BadRequestException("Email ja existente.");
+        }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.password());
         LocalDateTime createdAt = LocalDateTime.now();

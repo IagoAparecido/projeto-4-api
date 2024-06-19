@@ -2,6 +2,7 @@ package com.projeto.interdisciplinar.services;
 
 import java.io.IOException;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             var email = tokenService.validateToken(token);
             UserDetails user = userRepository.findByEmail(email);
+
+            if (user == null) {
+                throw new BadRequestException("Usuário não encontrado");
+            }
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

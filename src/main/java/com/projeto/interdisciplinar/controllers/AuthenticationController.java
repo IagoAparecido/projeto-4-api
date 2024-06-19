@@ -39,6 +39,11 @@ public class AuthenticationController {
                 return ResponseEntity.ok().body(this.authenticationService.login(data));
         }
 
+        @PostMapping("/login-dash")
+        public ResponseEntity loginDash(@RequestBody @Valid AuthenticationDTO data) throws BadRequestException {
+                return ResponseEntity.ok().body(this.authenticationService.loginDash(data));
+        }
+
         @PostMapping("/confirm")
         public ResponseEntity confirmEmail(@RequestParam String email,
                         @RequestParam String code) throws BadRequestException {
