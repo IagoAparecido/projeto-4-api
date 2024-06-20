@@ -149,9 +149,19 @@ public class PostService {
 
     }
 
-    public List<PostsModel> getPostsByUser(UUID userId, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return this.postRepository.findByUser(userId, pageable).getContent();
+    public GetPostsAndCountDTO getPostsByUser(UUID userId, int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+
+        var postsPage = this.postRepository.findByUser(userId, pageable);
+        List<PostsDTO> postsDTOs = postsPage.getContent().stream()
+                .map(post -> new PostsDTO(post.getId(), post.getName(), post.getAge(), post.getDescription(),
+                        post.getUf(), post.getCity(), post.getSex(), post.getType(), post.getRace(),
+                        post.getCreatedAt(), post.getUser(),
+                        post.getImages(), post.getComments()))
+                .collect(Collectors.toList());
+
+        var response = new GetPostsAndCountDTO(postsDTOs, postsPage.getTotalPages());
+        return response;
     }
 
     public PostsModel getUniquePost(UUID postId) {
